@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+  <!-- Deriv D.Bot Format - Three Column Martingale Strategy -->
+  <!-- This XML represents the trading bot structure for D.Bot visual editor -->
+  
+  <block type="text_print">
+    <field name="TEXT">🤖 Starting Deriv Martingale Bot - Three Column Strategy</field>
+  </block>
+
+  <!-- ====================================
+       COLUMN 1: FIRST PREDICTION
+       ==================================== -->
+  
+  <block type="controls_repeat_ext">
+    <value name="TIMES">
+      <shadow type="math_number">
+        <field name="NUM">1</field>
+      </shadow>
+    </value>
+    <statement name="DO">
+      <block type="text_print">
+        <field name="TEXT">🎯 First Prediction Column: Executing single contract</field>
+        <next>
+          <block type="variables_set">
+            <field name="VAR">FirstPrediction_Status</field>
+            <value name="VALUE">
+              <block type="text">
+                <field name="TEXT">ready</field>
+              </block>
+            </value>
+            <next>
+              <block type="variables_set">
+                <field name="VAR">FirstPrediction_Direction</field>
+                <value name="VALUE">
+                  <block type="math_random_int">
+                    <value name="FROM">
+                      <shadow type="math_number">
+                        <field name="NUM">0</field>
+                      </shadow>
+                    </value>
+                    <value name="TO">
+                      <shadow type="math_number">
+                        <field name="NUM">1</field>
+                      </shadow>
+                    </value>
+                  </block>
+                </value>
+                <next>
+                  <block type="bot_buy_contract">
+                    <field name="SYMBOL">R_100</field>
+                    <field name="DIRECTION">FirstPrediction_Direction</field>
+                    <value name="AMOUNT">
+                      <shadow type="math_number">
+                        <field name="NUM">10</field>
+                      </shadow>
+                    </value>
+                    <value name="DURATION">
+                      <shadow type="math_number">
+                        <field name="NUM">5</field>
+                      </shadow>
+                    </value>
+                    <field name="DURATION_UNIT">t</field>
+                    <next>
+                      <block type="variables_set">
+                        <field name="VAR">FirstPrediction_ContractID</field>
+                        <value name="VALUE">
+                          <block type="bot_contract_id"/>
+                        </value>
+                        <next>
+                          <block type="bot_wait_for_result">
+                            <value name="CONTRACT_ID">
+                              <block type="variables_get">
+                                <field name="VAR">FirstPrediction_ContractID</field>
+                              </block>
+                            </value>
+                            <next>
+                              <block type="variables_set">
+                                <field name="VAR">FirstPrediction_Result</field>
+                                <value name="VALUE">
+                                  <block type="bot_contract_result"/>
+                                </value>
+                                <next>
+                                  <block type="text_print">
+                                    <field name="TEXT">✅ First Prediction Complete</field>
+                                  </block>
+                                </next>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+
+  <!-- ====================================
+       COLUMN 2: INITIAL COLUMN (UNDER)
+       ==================================== -->
+  
+  <block type="controls_repeat_ext">
+    <value name="TIMES">
+      <shadow type="math_number">
+        <field name="NUM">999</field>
+      </shadow>
+    </value>
+    <statement name="DO">
+      <block type="controls_if">
+        <mutation else="false"/>
+        <value name="IF0">
+          <block type="logic_compare">
+            <field name="OP">EQ</field>
+            <value name="A">
+              <block type="variables_get">
+                <field name="VAR">RecoveryColumn_Status</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="text">
+                <field name="TEXT">idle</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="text_print">
+            <field name="TEXT">📍 Initial Column (Under): Executing PUT contract</field>
+            <next>
+              <block type="bot_buy_contract">
+                <field name="SYMBOL">R_100</field>
+                <field name="DIRECTION">PUT</field>
+                <value name="AMOUNT">
+                  <shadow type="math_number">
+                    <field name="NUM">10</field>
+                  </shadow>
+                </value>
+                <value name="DURATION">
+                  <shadow type="math_number">
+                    <field name="NUM">5</field>
+                  </shadow>
+                </value>
+                <field name="DURATION_UNIT">t</field>
+                <next>
+                  <block type="variables_set">
+                    <field name="VAR">InitialColumn_ContractID</field>
+                    <value name="VALUE">
+                      <block type="bot_contract_id"/>
+                    </value>
+                    <next>
+                      <block type="bot_wait_for_result">
+                        <value name="CONTRACT_ID">
+                          <block type="variables_get">
+                            <field name="VAR">InitialColumn_ContractID</field>
+                          </block>
+                        </value>
+                        <next>
+                          <block type="variables_set">
+                            <field name="VAR">InitialColumn_Result</field>
+                            <value name="VALUE">
+                              <block type="bot_contract_result"/>
+                            </value>
+                            <next>
+                              <block type="controls_if">
+                                <mutation else="true"/>
+                                <value name="IF0">
+                                  <block type="logic_compare">
+                                    <field name="OP">EQ</field>
+                                    <value name="A">
+                                      <block type="variables_get">
+                                        <field name="VAR">InitialColumn_Result</field>
+                                      </block>
+                                    </value>
+                                    <value name="B">
+                                      <block type="text">
+                                        <field name="TEXT">win</field>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </value>
+                                <statement name="DO0">
+                                  <block type="text_print">
+                                    <field name="TEXT">✅ WIN - Initial Column (Under). Continuing...</field>
+                                  </block>
+                                </statement>
+                                <statement name="ELSE">
+                                  <block type="text_print">
+                                    <field name="TEXT">❌ LOSS - Initial Column (Under). Triggering Recovery...</field>
+                                    <next>
+                                      <block type="variables_set">
+                                        <field name="VAR">RecoveryColumn_Status</field>
+                                        <value name="VALUE">
+                                          <block type="text">
+                                            <field name="TEXT">active</field>
+                                          </block>
+                                        </value>
+                                        <next>
+                                          <block type="variables_set">
+                                            <field name="VAR">RecoveryColumn_Level</field>
+                                            <value name="VALUE">
+                                              <shadow type="math_number">
+                                                <field name="NUM">0</field>
+                                              </shadow>
+                                            </value>
+                                          </block>
+                                        </next>
+                                      </block>
+                                    </next>
+                                  </block>
+                                </statement>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+
+  <!-- ====================================
+       COLUMN 3: RECOVERY COLUMN (OVER - MARTINGALE)
+       ==================================== -->
+  
+  <block type="controls_repeat_ext">
+    <value name="TIMES">
+      <shadow type="math_number">
+        <field name="NUM">999</field>
+      </shadow>
+    </value>
+    <statement name="DO">
+      <block type="controls_if">
+        <mutation else="false"/>
+        <value name="IF0">
+          <block type="logic_compare">
+            <field name="OP">EQ</field>
+            <value name="A">
+              <block type="variables_get">
+                <field name="VAR">RecoveryColumn_Status</field>
+              </block>
+            </value>
+            <value name="B">
+              <block type="text">
+                <field name="TEXT">active</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="variables_set">
+            <field name="VAR">RecoveryColumn_Level</field>
+            <value name="VALUE">
+              <block type="math_arithmetic">
+                <field name="OP">ADD</field>
+                <value name="A">
+                  <block type="variables_get">
+                    <field name="VAR">RecoveryColumn_Level</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <shadow type="math_number">
+                    <field name="NUM">1</field>
+                  </shadow>
+                </value>
+              </block>
+            </value>
+            <next>
+              <block type="variables_set">
+                <field name="VAR">RecoveryColumn_Stake</field>
+                <value name="VALUE">
+                  <block type="math_arithmetic">
+                    <field name="OP">MULTIPLY</field>
+                    <value name="A">
+                      <shadow type="math_number">
+                        <field name="NUM">10</field>
+                      </shadow>
+                    </value>
+                    <value name="B">
+                      <block type="math_arithmetic">
+                        <field name="OP">POWER</field>
+                        <value name="A">
+                          <shadow type="math_number">
+                            <field name="NUM">2</field>
+                          </shadow>
+                        </value>
+                        <value name="B">
+                          <block type="math_arithmetic">
+                            <field name="OP">MINUS</field>
+                            <value name="A">
+                              <block type="variables_get">
+                                <field name="VAR">RecoveryColumn_Level</field>
+                              </block>
+                            </value>
+                            <value name="B">
+                              <shadow type="math_number">
+                                <field name="NUM">1</field>
+                              </shadow>
+                            </value>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <next>
+                  <block type="text_print">
+                    <field name="TEXT">💰 Recovery Column (Over): Level ${RecoveryColumn_Level}, Stake: ${RecoveryColumn_Stake}</field>
+                    <next>
+                      <block type="bot_buy_contract">
+                        <field name="SYMBOL">R_100</field>
+                        <field name="DIRECTION">CALL</field>
+                        <value name="AMOUNT">
+                          <block type="variables_get">
+                            <field name="VAR">RecoveryColumn_Stake</field>
+                          </block>
+                        </value>
+                        <value name="DURATION">
+                          <shadow type="math_number">
+                            <field name="NUM">5</field>
+                          </shadow>
+                        </value>
+                        <field name="DURATION_UNIT">t</field>
+                        <next>
+                          <block type="variables_set">
+                            <field name="VAR">RecoveryColumn_ContractID</field>
+                            <value name="VALUE">
+                              <block type="bot_contract_id"/>
+                            </value>
+                            <next>
+                              <block type="bot_wait_for_result">
+                                <value name="CONTRACT_ID">
+                                  <block type="variables_get">
+                                    <field name="VAR">RecoveryColumn_ContractID</field>
+                                  </block>
+                                </value>
+                                <next>
+                                  <block type="variables_set">
+                                    <field name="VAR">RecoveryColumn_Result</field>
+                                    <value name="VALUE">
+                                      <block type="bot_contract_result"/>
+                                    </value>
+                                    <next>
+                                      <block type="controls_if">
+                                        <mutation else="true"/>
+                                        <value name="IF0">
+                                          <block type="logic_compare">
+                                            <field name="OP">EQ</field>
+                                            <value name="A">
+                                              <block type="variables_get">
+                                                <field name="VAR">RecoveryColumn_Result</field>
+                                              </block>
+                                            </value>
+                                            <value name="B">
+                                              <block type="text">
+                                                <field name="TEXT">win</field>
+                                              </block>
+                                            </value>
+                                          </block>
+                                        </value>
+                                        <statement name="DO0">
+                                          <block type="text_print">
+                                            <field name="TEXT">✅ Recovery Successful at Level ${RecoveryColumn_Level}!</field>
+                                            <next>
+                                              <block type="variables_set">
+                                                <field name="VAR">RecoveryColumn_Status</field>
+                                                <value name="VALUE">
+                                                  <block type="text">
+                                                    <field name="TEXT">idle</field>
+                                                  </block>
+                                                </value>
+                                              </block>
+                                            </next>
+                                          </block>
+                                        </statement>
+                                        <statement name="ELSE">
+                                          <block type="text_print">
+                                            <field name="TEXT">❌ Level ${RecoveryColumn_Level} failed. Moving to next level...</field>
+                                          </block>
+                                        </statement>
+                                      </block>
+                                    </next>
+                                  </block>
+                                </next>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+
+  <!-- Custom blocks definitions for D.Bot compatibility -->
+  <block-definition name="bot_buy_contract">
+    <input name="SYMBOL" type="field"/>
+    <input name="DIRECTION" type="field"/>
+    <input name="AMOUNT" type="value"/>
+    <input name="DURATION" type="value"/>
+    <input name="DURATION_UNIT" type="field"/>
+    <description>Buy a binary contract on Deriv</description>
+    <output type="string">contract_id</output>
+  </block-definition>
+
+  <block-definition name="bot_contract_id">
+    <description>Get the ID of the last bought contract</description>
+    <output type="string">contract_id</output>
+  </block-definition>
+
+  <block-definition name="bot_wait_for_result">
+    <input name="CONTRACT_ID" type="value"/>
+    <description>Wait for contract to close and return result</description>
+  </block-definition>
+
+  <block-definition name="bot_contract_result">
+    <description>Get result of last contract (win/loss)</description>
+    <output type="string">result</output>
+  </block-definition>
+
+</xml>
